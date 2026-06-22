@@ -51,6 +51,10 @@ func getWeather(c *gin.Context) {
 		c.JSON(http.StatusTooManyRequests, gin.H{"error": "Too many requests. Please try again later."})
 		return
 	}
+	if err == nil && request == 1 {
+		// Устанавливаем время жизни ключа только в момент его создания (когда счётчик равен 1)
+		rdb.Expire(ctx, rateKey, time.Minute)
+	}
 
 	// 2. КЭШИРОВАНИЕ ДАННЫХ
 
